@@ -56,7 +56,7 @@ def amount():
 
                 result = (ValoreRichiesto - ValorePosseduto)/float(in_Value)
                 conn.close()
-                return render_template("tobuy.html", result = result)
+                return render_template("amount_result.html", result = result)
             else:
                 conn.close()
                 return redirect("/error")
@@ -78,7 +78,7 @@ def printTable():
         c.execute("SELECT SUM(Btc_Acquistati * Prezzo_BTC) FROM Acquisti")
         spent_euro = c.fetchone()[0]
         conn.close()
-        return render_template("print_tot.html", rows = rows, tot = tot, value = "{0:.2f}".format(price*tot), spent_euro="{0:.2f}".format(spent_euro))
+        return render_template("print_tot.html", rows = rows, tot = tot, value = "{:.2f}".format(price*tot), spent_euro="{:.2f}".format(spent_euro))
     else:
         conn.close()
         return redirect("/error")
@@ -95,9 +95,33 @@ def reset():
             conn.commit()
             c.execute("ALTER TABLE Acquisti AUTO_INCREMENT = 1")
             conn.commit()
+            conn.close()
             return redirect("/")
         else:
             return redirect("/error")
+
+@app.route('/incomecalc', methods=['GET', 'POST'])
+def incomecalc():
+    if request.method=='GET':
+        return render_template("amount.html")
+    else:
+        PricePattern = re.compile("^[0-9]{1,6}(($)|\.[0-9]{1,4}$)")
+        in_Value = request.form['Value']
+        if PricePattern.match(in_Value):
+            conn = MySQLdb.connect("localhost", "root", "toor", "BTC_Value_Average")
+            c = conn.cursor()
+            c.execute("SELECT SUM(Btc_Acquistati) FROM Acquisti")
+            tot_btc_acquistati = c.fetchone()[0]
+            c.execute("SELECT SUM(Btc_Acquistati * Prezzo_BTC) FROM Acquisti")
+            spent_euro = c.fetchone()[0]
+            conn.close()
+
+            guadagno = (float(tot_btc_acquistati)* float(in_Value)) - float(spent_euro)
+            return render_template("amount_result.html", result = "{:.2f}".format(guadagno))
+        else:
+            return redirect("/error")
+
+
 
 
 @app.route('/error')
