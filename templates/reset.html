@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block body %}
+<div class="col-sm-8 col-sm-offset-2">
+    <h4 class="text-center text-warning">Per confermare il reset digitare RESET nel form sottostante (l'operazione è irreversibile)</h4>
+    <form class="form form-inline text-center" method="POST" action="/reset">
+        <div class="form-group">
+            <input type="text" class="form-control" name="Confirm"/>
+        </div>
+        <button type="submit" class="btn btn-danger">Confirm Reset</button>
+    </form>
+</div>
+
+{% endblock %}
