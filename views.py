@@ -20,7 +20,7 @@ def insert():
         in_Price = request.form['Price_BTC']
 
         if NumPattern.match(in_Num) and PricePattern.match(in_Price) and DataPattern.match(in_Data):
-            conn = MySQLdb.connect("localhost", "root", "toor", "BTC_Value_Average")
+            conn = MySQLdb.connect(app.config["DB_HOST"], app.config["DB_USER"], app.config["DB_PASS"], app.config["DB_NAME"])
             c = conn.cursor()
             query = "INSERT INTO Acquisti(Data, Btc_Acquistati, Prezzo_BTC) VALUES(\"" + in_Data + "\", " + in_Num + ", " + in_Price + ")"
             c.execute(query)
@@ -39,7 +39,7 @@ def amount():
         in_Value = request.form['Value']
 
         if PricePattern.match(in_Value):
-            conn = MySQLdb.connect("localhost", "root", "toor", "BTC_Value_Average")
+            conn = MySQLdb.connect(app.config["DB_HOST"], app.config["DB_USER"], app.config["DB_PASS"], app.config["DB_NAME"])
             c = conn.cursor()
             c.execute("SELECT MAX(id) FROM Acquisti")
 
@@ -66,7 +66,7 @@ def amount():
 
 @app.route('/print')
 def printTable():
-    conn = MySQLdb.connect("localhost", "root", "toor", "BTC_Value_Average")
+    conn = MySQLdb.connect(app.config["DB_HOST"], app.config["DB_USER"], app.config["DB_PASS"], app.config["DB_NAME"])
     c = conn.cursor()
     c.execute("SELECT id, Data, Btc_Acquistati, Prezzo_BTC FROM Acquisti")
     rows = c.fetchall()
@@ -89,7 +89,7 @@ def reset():
         return render_template("reset.html")
     else:
         if request.form['Confirm'] == 'RESET':
-            conn = MySQLdb.connect("localhost", "root", "toor", "BTC_Value_Average")
+            conn = MySQLdb.connect(app.config["DB_HOST"], app.config["DB_USER"], app.config["DB_PASS"], app.config["DB_NAME"])
             c = conn.cursor()
             c.execute("DELETE FROM Acquisti")
             conn.commit()
@@ -108,7 +108,7 @@ def incomecalc():
         PricePattern = re.compile("^[0-9]{1,6}(($)|\.[0-9]{1,4}$)")
         in_Value = request.form['Value']
         if PricePattern.match(in_Value):
-            conn = MySQLdb.connect("localhost", "root", "toor", "BTC_Value_Average")
+            conn = MySQLdb.connect(app.config["DB_HOST"], app.config["DB_USER"], app.config["DB_PASS"], app.config["DB_NAME"])
             c = conn.cursor()
             c.execute("SELECT SUM(Btc_Acquistati) FROM Acquisti")
             tot_btc_acquistati = c.fetchone()[0]
