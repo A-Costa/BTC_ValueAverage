@@ -1,0 +1,11 @@
+{% extends "print.html" %}
+
+{% block tot %}
+<p>Totale BTC: {{ tot }}</p>
+<p>Valore Totale (al prezzo dell'ultimo acquisto): {{ value }}</p>
+<p>Euro Spesi: {{ spent_euro }}</p>
+
+<hr>
+<p><a href="/reset" class="btn btn-danger">Reset Table</a></p>
+
+{% endblock %}
