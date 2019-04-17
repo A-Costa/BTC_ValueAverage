@@ -1,0 +1,9 @@
+-- .read create.sqlite
+
+.open db.sqlite
+
+CREATE TABLE Acquisti(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    Data TEXT,
+    Btc_Acquistati REAL,
+    Prezzo_BTC REAL);
